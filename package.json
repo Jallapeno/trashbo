@@ -1,0 +1,19 @@
+{
+  "name": "trashbo",
+  "version": "1.0.0",
+  "description": "bot para avisar quando sera coleta seletiva ou organica",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./src/index.js"
+  },
+  "author": "Hytalo Antonio - Jallapeno",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.26.1",
+    "venom-bot": "^4.0.9"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
