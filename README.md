@@ -1,4 +1,4 @@
-# TrashBot (Em desenvolvimento)
+# TrashBot versão JavaScript 1.0.0
 
 ### O bot que irá te avisar quando tem coleta seletiva ou convencional
 
