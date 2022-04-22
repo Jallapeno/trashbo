@@ -1,4 +1,4 @@
-# TrashBot (Em desenvolvimento)
+# TrashBot versão com TypeScript (Em desenvolvimento)
 
 ### O bot que irá te avisar quando tem coleta seletiva ou convencional
 
