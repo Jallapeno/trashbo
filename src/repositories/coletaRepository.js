@@ -4,6 +4,12 @@ const axios = require('axios');
 const urlBuscaEnderecoColeta = global.URL_ENDERECO_COLETA;
 const urlBuscaColetas = global.URL_APENAS_COLETA;
 
+const hoje = new Date();
+const amanha = new Date();
+amanha.setDate(hoje.getDate() + 1);
+const amanhaSplit = amanha.toLocaleDateString('pt-br', {weekday: "long", month: "long", day: "numeric"}).split("-", 1);
+const amanhaSplitStr = String(amanhaSplit[0]);
+
 exports.buscaEnderecoColetaConvencional = async(cep) => {
     const primeiroWkid = encodeURIComponent('{"wkid":102100}');
     const segundoWkid = encodeURIComponent('":102100}}');
@@ -22,7 +28,12 @@ exports.coletaConvencional = async(x, y) => {
         const attributes = features[0]['attributes'];
         const horario_inicio = String(attributes['horario_inicio']).slice(11);
         const horario_termino = String(attributes['horario_termino']).slice(11);
-        return await JSON.stringify({frequencia: attributes['frequencia'], horario_inicio: horario_inicio, horario_termino: horario_termino});
+        const isFrequenciaConvencional = String(attributes['frequencia']).search(amanhaSplitStr.replace(/^\w/, (c) => c.toUpperCase()).split(",",1));
+        if(isFrequenciaConvencional != -1) {
+            return await JSON.stringify({message: 'Amanhã terá coleta CONVENCIONAL. Das ' + horario_inicio + ' às ' + horario_termino});
+        } else {
+            return await JSON.stringify({message: 'Amanhã terá não coleta CONVENCIONAL.'});
+        }
     } else {
         return await JSON.stringify({message: 'Ainda não há coleta CONVENCIONAL para essa área :('});
     }
@@ -45,7 +56,12 @@ exports.coletaSeletiva = async(x, y) => {
         const attributes = features[0]['attributes'];
         const horario_inicio = String(attributes['horario_inicio']).slice(11);
         const horario_termino = String(attributes['horario_termino']).slice(11);
-        return await JSON.stringify({frequencia: attributes['frequencia'], horario_inicio: horario_inicio, horario_termino: horario_termino});
+        const isFrequenciaSeletiva = String(attributes['frequencia']).search(amanhaSplitStr.replace(/^\w/, (c) => c.toUpperCase()).split(",",1));
+        if(isFrequenciaSeletiva != -1) {
+            return await JSON.stringify({message: 'Amanhã terá coleta SELETIVA. Das ' + horario_inicio + ' às ' + horario_termino});
+        } else {
+            return await JSON.stringify({message: 'Amanhã terá não coleta SELETIVA.'});
+        }        
     } else {
         return await JSON.stringify({message: 'Ainda não há coleta SELETIVA para essa área :('});
     }

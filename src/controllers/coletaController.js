@@ -1,6 +1,13 @@
 'use strict'
 const repository = require('../repositories/coletaRepository');
 
+const hoje = new Date();
+const amanha = new Date();
+amanha.setDate(hoje.getDate() + 1);
+
+const amanhaSplit = amanha.toLocaleDateString('pt-br', {weekday: "long", month: "long", day: "numeric"}).split("-", 1);
+const amanhaSplitStr = String(amanhaSplit[0]);
+
 module.exports = {
     async index(req, res, next) {
         try {
