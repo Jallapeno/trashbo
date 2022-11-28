@@ -24,13 +24,14 @@ exports.coletaConvencional = async(x, y) => {
     const urlMontada = urlBuscaColetas+'Coleta_Convencional/FeatureServer/1/query?f=json&returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry='+primeiroWkid+'spatialReference'+segundoWkid+'&geometryType=esriGeometryPoint&inSR=102100&outFields=*&outSR=102100';
     const response = await axios.get(urlMontada);
     const features = response['data']['features'];
+    console.log(features);
     if(features != '') {
         const attributes = features[0]['attributes'];
-        const horario_inicio = String(attributes['horario_inicio']).slice(11);
-        const horario_termino = String(attributes['horario_termino']).slice(11);
+        // const horario_inicio = String(attributes['horario_inicio']).slice(11);
+        // const horario_termino = String(attributes['horario_termino']).slice(11);
         const isFrequenciaConvencional = String(attributes['frequencia']).search(amanhaSplitStr.replace(/^\w/, (c) => c.toUpperCase()).split(",",1));
         if(isFrequenciaConvencional != -1) {
-            return await JSON.stringify({message: 'Amanhã terá coleta CONVENCIONAL. Das ' + horario_inicio + ' às ' + horario_termino});
+            return await JSON.stringify({message: 'Amanhã terá coleta CONVENCIONAL. Das ' + attributes['horario_inicio'] + ' às ' + attributes['horario_termino']});
         } else {
             return await JSON.stringify({message: 'Amanhã terá não coleta CONVENCIONAL.'});
         }
@@ -52,13 +53,14 @@ exports.coletaSeletiva = async(x, y) => {
     const urlMontada = urlBuscaColetas+'Coleta_Seletiva/FeatureServer/1/query?f=json&returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry='+primeiroWkid+'spatialReference'+segundoWkid+'&geometryType=esriGeometryPoint&inSR=102100&outFields=*&outSR=102100';
     const response = await axios.get(urlMontada);
     const features = response['data']['features'];
+    console.log(features);
     if(features != '') {
         const attributes = features[0]['attributes'];
-        const horario_inicio = String(attributes['horario_inicio']).slice(11);
-        const horario_termino = String(attributes['horario_termino']).slice(11);
+        // const horario_inicio = String(attributes['horario_inicio']).slice(11);
+        // const horario_termino = String(attributes['horario_termino']).slice(11);
         const isFrequenciaSeletiva = String(attributes['frequencia']).search(amanhaSplitStr.replace(/^\w/, (c) => c.toUpperCase()).split(",",1));
         if(isFrequenciaSeletiva != -1) {
-            return await JSON.stringify({message: 'Amanhã terá coleta SELETIVA. Das ' + horario_inicio + ' às ' + horario_termino});
+            return await JSON.stringify({message: 'Amanhã terá coleta SELETIVA. Das ' + attributes['horario_inicio'] + ' às ' + attributes['horario_termino']});
         } else {
             return await JSON.stringify({message: 'Amanhã terá não coleta SELETIVA.'});
         }        
