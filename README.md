@@ -1,14 +1,19 @@
-# TrashBot versão JavaScript 1.0.0
+# TrashBot Api versão JavaScript 1.0.0
 
-### O bot que irá te avisar quando tem coleta seletiva ou convencional
+### ⚠️ Atenção
 
-#### informações úteis abaixo
+* Este é o repositório da API que busca os dados da coleta de lixo através do CEP informado
 
-### Endpoind busca enderecos
-http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?SingleLine=72240-606&f=json&outSR=%7B%22wkid%22%3A102100%7D&outFields=*wkid%22%3A102100%7D%7D
+<hr>
 
-### Endpoins coleta convencional
-https://siggis.slu.df.gov.br/arcgis/rest/services/Coletas/Coleta_Convencional/FeatureServer/1/query?f=json&returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=%7B%22x%22%3A-5357414.687033424%2C%22y%22%3A-1783415.049043646%2C%22spatialReference%22%3A%7B%22wkid%22%3A102100%7D%7D&geometryType=esriGeometryPoint&inSR=102100&outFields=*&outSR=102100
+### 🤖 O bot pode ser encontrado neste repositório aqui
+* 👉 <a href="https://github.com/Jallapeno/trashbo-venom-bot">TrashBot Venom Bot (Em desenvolvimento)</a> 👈
 
-### Endpoind coleta seletiva
-https://siggis.slu.df.gov.br/arcgis/rest/services/Coletas/Coleta_Seletiva/FeatureServer/1/query?f=json&returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=%7B%22x%22%3A-5358054.221989251%2C%22y%22%3A-1782967.8718537304%2C%22spatialReference%22%3A%7B%22wkid%22%3A102100%7D%7D&geometryType=esriGeometryPoint&inSR=102100&outFields=*&outSR=102100
+<hr>
+
+### 📌 Informações adicionais
+
+* Clone o repositório
+* Instale as dependencias usando $ npm install
+* Inicie a aplicação usando o $ npm start
+* Rota para consultar coleta da sua região: http:localhost/coleta/:cep

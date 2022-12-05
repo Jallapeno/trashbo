@@ -4,6 +4,12 @@ const axios = require('axios');
 const urlBuscaEnderecoColeta = global.URL_ENDERECO_COLETA;
 const urlBuscaColetas = global.URL_APENAS_COLETA;
 
+const hoje = new Date();
+const amanha = new Date();
+amanha.setDate(hoje.getDate() + 1);
+const amanhaSplit = amanha.toLocaleDateString('pt-br', {weekday: "long", month: "long", day: "numeric"}).split("-", 1);
+const amanhaSplitStr = String(amanhaSplit[0]);
+
 exports.buscaEnderecoColetaConvencional = async(cep) => {
     const primeiroWkid = encodeURIComponent('{"wkid":102100}');
     const segundoWkid = encodeURIComponent('":102100}}');
@@ -17,10 +23,21 @@ exports.coletaConvencional = async(x, y) => {
     const segundoWkid = encodeURIComponent('":{"wkid":102100}}');
     const urlMontada = urlBuscaColetas+'Coleta_Convencional/FeatureServer/1/query?f=json&returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry='+primeiroWkid+'spatialReference'+segundoWkid+'&geometryType=esriGeometryPoint&inSR=102100&outFields=*&outSR=102100';
     const response = await axios.get(urlMontada);
-    const attributes = response['data']['features'][0]['attributes'];
-    const horario_inicio = String(attributes['horario_inicio']).slice(11);
-    const horario_termino = String(attributes['horario_termino']).slice(11);
-    return await JSON.stringify({frequencia: attributes['frequencia'], horario_inicio: horario_inicio, horario_termino: horario_termino});
+    const features = response['data']['features'];
+    console.log(features);
+    if(features != '') {
+        const attributes = features[0]['attributes'];
+        // const horario_inicio = String(attributes['horario_inicio']).slice(11);
+        // const horario_termino = String(attributes['horario_termino']).slice(11);
+        const isFrequenciaConvencional = String(attributes['frequencia']).search(amanhaSplitStr.replace(/^\w/, (c) => c.toUpperCase()).split(",",1));
+        if(isFrequenciaConvencional != -1) {
+            return await JSON.stringify({message: `Amanhã terá coleta CONVENCIONAL. A coleta CONVENCIONAL para seu CEP acontece ${attributes['frequencia']} das ${attributes['horario_inicio']} às ${attributes['horario_termino']}`});
+        } else {
+            return await JSON.stringify({message: 'Amanhã não terá coleta CONVENCIONAL.'});
+        }
+    } else {
+        return await JSON.stringify({message: 'Ainda não há coleta CONVENCIONAL para essa área :('});
+    }
 };
 
 exports.buscaEnderecoColetaSeletiva = async(cep) => {
@@ -35,8 +52,19 @@ exports.coletaSeletiva = async(x, y) => {
     const segundoWkid = encodeURIComponent('":{"wkid":102100}}');
     const urlMontada = urlBuscaColetas+'Coleta_Seletiva/FeatureServer/1/query?f=json&returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry='+primeiroWkid+'spatialReference'+segundoWkid+'&geometryType=esriGeometryPoint&inSR=102100&outFields=*&outSR=102100';
     const response = await axios.get(urlMontada);
-    const attributes = response['data']['features'][0]['attributes'];
-    const horario_inicio = String(attributes['horario_inicio']).slice(11);
-    const horario_termino = String(attributes['horario_termino']).slice(11);
-    return await JSON.stringify({frequencia: attributes['frequencia'], horario_inicio: horario_inicio, horario_termino: horario_termino});
+    const features = response['data']['features'];
+    console.log(features);
+    if(features != '') {
+        const attributes = features[0]['attributes'];
+        // const horario_inicio = String(attributes['horario_inicio']).slice(11);
+        // const horario_termino = String(attributes['horario_termino']).slice(11);
+        const isFrequenciaSeletiva = String(attributes['frequencia']).search(amanhaSplitStr.replace(/^\w/, (c) => c.toUpperCase()).split(",",1));
+        if(isFrequenciaSeletiva != -1) {
+            return await JSON.stringify({message: `Amanhã terá coleta SELETIVA. A coleta SELETIVA para seu CEP acontece ${attributes['frequencia']} das ${attributes['horario_inicio']} às ${attributes['horario_termino']}`});
+        } else {
+            return await JSON.stringify({message: 'Amanhã não terá coleta SELETIVA.'});
+        }        
+    } else {
+        return await JSON.stringify({message: 'Ainda não há coleta SELETIVA para essa área :('});
+    }
 };
