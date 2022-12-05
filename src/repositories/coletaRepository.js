@@ -31,9 +31,9 @@ exports.coletaConvencional = async(x, y) => {
         // const horario_termino = String(attributes['horario_termino']).slice(11);
         const isFrequenciaConvencional = String(attributes['frequencia']).search(amanhaSplitStr.replace(/^\w/, (c) => c.toUpperCase()).split(",",1));
         if(isFrequenciaConvencional != -1) {
-            return await JSON.stringify({message: 'Amanhã terá coleta CONVENCIONAL. Das ' + attributes['horario_inicio'] + ' às ' + attributes['horario_termino']});
+            return await JSON.stringify({message: `Amanhã terá coleta CONVENCIONAL. A coleta CONVENCIONAL para seu CEP acontece ${attributes['frequencia']} das ${attributes['horario_inicio']} às ${attributes['horario_termino']}`});
         } else {
-            return await JSON.stringify({message: 'Amanhã terá não coleta CONVENCIONAL.'});
+            return await JSON.stringify({message: 'Amanhã não terá coleta CONVENCIONAL.'});
         }
     } else {
         return await JSON.stringify({message: 'Ainda não há coleta CONVENCIONAL para essa área :('});
@@ -60,9 +60,9 @@ exports.coletaSeletiva = async(x, y) => {
         // const horario_termino = String(attributes['horario_termino']).slice(11);
         const isFrequenciaSeletiva = String(attributes['frequencia']).search(amanhaSplitStr.replace(/^\w/, (c) => c.toUpperCase()).split(",",1));
         if(isFrequenciaSeletiva != -1) {
-            return await JSON.stringify({message: 'Amanhã terá coleta SELETIVA. Das ' + attributes['horario_inicio'] + ' às ' + attributes['horario_termino']});
+            return await JSON.stringify({message: `Amanhã terá coleta SELETIVA. A coleta SELETIVA para seu CEP acontece ${attributes['frequencia']} das ${attributes['horario_inicio']} às ${attributes['horario_termino']}`});
         } else {
-            return await JSON.stringify({message: 'Amanhã terá não coleta SELETIVA.'});
+            return await JSON.stringify({message: 'Amanhã não terá coleta SELETIVA.'});
         }        
     } else {
         return await JSON.stringify({message: 'Ainda não há coleta SELETIVA para essa área :('});
