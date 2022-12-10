@@ -4,7 +4,7 @@ import { CollectController, UserController } from './controllers'
 import { User } from './models';
 
 const userController = new UserController();
-// const collectController = new CollectController;
+const collectController = new CollectController();
 
 
 routes.get('/', async(req, res) => {
@@ -28,6 +28,19 @@ routes.post('/users/register', async (req, res) => {
     })
 })
 
-// routes.get('/coleta/:cep', coletaController.coleta);
+routes.post('/coleta', async(req, res) => {
+    const cep = req.body.cep;
+    return await collectController.dailyCollect(cep).then((response) => {
+        res.status(200).send(response)
+    }).catch((err) => {
+        return res.status(res.statusCode || 400).json({
+            message: err.message || 'Unexpected error.'
+        })
+    })
+});
+
+routes.post('/coleta/byPhone', async (req, res) => {
+    const phoneNumber = req.body.phoneNumber;
+})
 
 export { routes };
