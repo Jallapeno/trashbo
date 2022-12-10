@@ -3,5 +3,5 @@ export class User {
     name?: string;
     phoneNumber?: string;
     active?: boolean;
-    cep?: number;
+    cep?: string;
 }
