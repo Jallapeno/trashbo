@@ -1,8 +1,5 @@
-// import { PrismaClient } from '@prisma/client';
 import axios from 'axios';
 import config from '../../config';
-
-// const prisma = new PrismaClient();
 
 const urlBuscaEnderecoColeta = config.URL_ENDERECO_COLETA
 const urlBuscaColetas = config.URL_APENAS_COLETA;
