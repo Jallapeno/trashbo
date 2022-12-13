@@ -1,4 +1,3 @@
-import { CollectResponse } from '../models';
 import { CollectRepository, UserRepository } from '../repositories';
 
 const collectRepository = new CollectRepository();
@@ -13,11 +12,16 @@ export class CollectController {
                 const responseSeletive = await collectRepository.dailySeletiveCollect(location.coordinates.x, location.coordinates.y);
 
                 return {
-                    convencional: responseConventional.message, 
-                    convencionalFrequencia: responseConventional.frequencia,
-                    seletiva: responseSeletive.message,
-                    seletivaFrequencia: responseSeletive.frequencia,
-                    amanha: responseConventional.amanha
+                    convencional: {
+                        convencionalFrequencia: responseConventional.frequencia,
+                        convencionalMessage: responseConventional.message, 
+                    },
+                    seletiva: {
+                        seletivaFrequencia: responseSeletive.frequencia,
+                        seletivaMessage: responseSeletive.message,
+                    },
+                    amanha: responseConventional.amanha,
+                    hoje: responseConventional.hoje
                 }
             }
         } else {
