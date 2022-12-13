@@ -1,8 +1,4 @@
-# TrashBot Api versão JavaScript 1.0.0
-
-### ⚠️ Atenção
-
-* Este é o repositório da API que busca os dados da coleta de lixo através do CEP informado
+# TrashBot Api TypeScript 0.0.1
 
 <hr>
 
