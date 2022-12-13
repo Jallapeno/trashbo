@@ -1,2 +1,2 @@
-export { CollectRepository } from './CollectRepository'
+export { CollectRepository } from './CollectRepositoryTest'
 export { UserRepository } from './UserRepository';

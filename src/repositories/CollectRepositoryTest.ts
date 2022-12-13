@@ -1,6 +1,5 @@
 // import { PrismaClient } from '@prisma/client';
 import axios from 'axios';
-import { CollectResponse } from '../models';
 import config from '../../config';
 
 // const prisma = new PrismaClient();
@@ -8,7 +7,11 @@ import config from '../../config';
 const urlBuscaEnderecoColeta = config.URL_ENDERECO_COLETA
 const urlBuscaColetas = config.URL_APENAS_COLETA;
 
+// logica do hoje
 const hoje = new Date();
+const hojeSplit = hoje.toLocaleDateString('pt-br', {weekday: "long", month: "long", day: "numeric"}).split("-", 1);
+const hojeSplitStr = String(hojeSplit[0]);
+const hojeSplitReplace = hojeSplitStr.replace(/^\w/, (c) => c.toUpperCase()).split(",",1)[0];
 
 // lógica do amanhã
 const amanha = new Date();
@@ -16,6 +19,7 @@ amanha.setDate(hoje.getDate() + 1);
 const amanhaSplit = amanha.toLocaleDateString('pt-br', {weekday: "long", month: "long", day: "numeric"}).split("-", 1);
 const amanhaSplitStr = String(amanhaSplit[0]);
 const amanhaSplitReplace = amanhaSplitStr.replace(/^\w/, (c) => c.toUpperCase()).split(",",1)[0];
+
 
 export class CollectRepository {
 
@@ -60,25 +64,43 @@ export class CollectRepository {
             let attributes = features[0]['attributes'];
             let frequencia = attributes['frequencia'];
 
-            let isFrequenciaConvencional = String(frequencia).search(amanhaSplitReplace);
-            if(isFrequenciaConvencional != -1) {
-                return {
-                    frequencia: frequencia,
-                    amanha: amanhaSplitReplace,
-                    message: `Amanhã terá coleta CONVENCIONAL das ${attributes['horario_inicio']} às ${attributes['horario_termino']}`
-                }
+            let isFrequenciaConvencionalAmanha = String(frequencia).search(amanhaSplitReplace);
+            let isFrequenciaConvencionalHoje = String(frequencia).search(hojeSplitReplace);
+            
+            let convencionalAmanha: string = '';
+            let convencionalHoje: string = '';
+
+            if(isFrequenciaConvencionalAmanha != -1) {
+                convencionalAmanha = `Amanhã terá coleta CONVENCIONAL das ${attributes['horario_inicio']} às ${attributes['horario_termino']}`;
             } else {
-                return { 
-                    frequencia: frequencia,
-                    amanha: amanhaSplitReplace,
-                    message: 'Amanhã não terá coleta CONVENCIONAL.' 
-                };
+                convencionalAmanha = 'Amanhã não terá coleta CONVENCIONAL.';
             }
+
+            if(isFrequenciaConvencionalHoje != -1) {
+                convencionalHoje = `Hoje terá coleta CONVENCIONAL das ${attributes['horario_inicio']} às ${attributes['horario_termino']}`;
+            } else {
+                convencionalHoje = 'Hoje não terá coleta CONVENCIONAL.';
+            }
+
+            return {
+                frequencia: frequencia,
+                amanha: amanhaSplitReplace,
+                hoje: hojeSplitReplace,
+                message: {
+                    hoje: convencionalHoje,
+                    amanha: convencionalAmanha
+                }
+            }
+            
         } else {
             return { 
                 frequencia: '',
                 amanha: amanhaSplitReplace,
-                message: 'Ainda não há coleta CONVENCIONAL para essa área.' 
+                hoje: hojeSplitReplace,
+                message: {
+                    hoje: '',
+                    amanha: 'Ainda não há coleta CONVENCIONAL para essa área.' 
+                }
             };
         }
 
@@ -117,22 +139,39 @@ export class CollectRepository {
             let attributes = features[0]['attributes'];
             let frequencia = attributes['frequencia'];
 
-            let isFrequenciaSeletiva = String(frequencia).search(amanhaSplitReplace);
-            if(isFrequenciaSeletiva != -1) {
-                return {
-                    frequencia: frequencia,
-                    message: `Amanhã terá coleta SELETIVA das ${attributes['horario_inicio']} às ${attributes['horario_termino']}`
-                }
+            let isFrequenciaSeletivaAmanha = String(frequencia).search(amanhaSplitReplace);
+            let isFrequenciaSeletivaHoje = String(frequencia).search(hojeSplitReplace);
+
+            let seletivalAmanha: string = '';
+            let seletivaHoje: string = '';
+
+            if(isFrequenciaSeletivaAmanha != -1) {
+                seletivalAmanha = `Amanhã terá coleta SELETIVA das ${attributes['horario_inicio']} às ${attributes['horario_termino']}`;
             } else {
-                return { 
-                    frequencia: frequencia,
-                    message: 'Amanhã não terá coleta SELETIVA.' 
-                };
+                seletivalAmanha = 'Amanhã não terá coleta SELETIVA.';
             }
+
+            if(isFrequenciaSeletivaHoje != -1) {
+                seletivaHoje = `Hoje terá coleta SELETIVA das ${attributes['horario_inicio']} às ${attributes['horario_termino']}`
+            } else {
+                seletivaHoje = 'Hoje não terá coleta SELETIVA.' 
+            }
+
+            return {
+                frequencia: frequencia,
+                message: {
+                    hoje: seletivaHoje,
+                    amanha: seletivalAmanha
+                }
+            }
+
         } else {
             return { 
                 frequencia: '',
-                message: 'Ainda não há coleta SELETIVA para essa área.' 
+                message: {
+                    hoje: '',
+                    amanha: 'Ainda não há coleta SELETIVA para essa área.' 
+                }
             };
         }
 
