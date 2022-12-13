@@ -1,7 +1,8 @@
 import { CollectResponse } from '../models';
-import { CollectRepository } from '../repositories';
+import { CollectRepository, UserRepository } from '../repositories';
 
 const collectRepository = new CollectRepository();
+const userRepository = new UserRepository();
 
 export class CollectController {
     async dailyCollect(cep: string) {
@@ -25,6 +26,16 @@ export class CollectController {
     }
 
     async getCollectByPhoneNumber(phoneNumber: string) {
-        
+        if(phoneNumber) {
+            const user = await userRepository.findUserCepByPhone(phoneNumber);
+            if(user) {
+                const response = await this.dailyCollect(user.cep);
+                return response
+            } else {
+                return { message: 'Número inválido' }
+            }
+        } else {
+            return { message: 'Erro ao pesquisar coleta' }
+        }
     }
 }

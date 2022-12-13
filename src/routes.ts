@@ -29,7 +29,7 @@ routes.post('/users/register', async (req, res) => {
 })
 
 routes.post('/coleta', async(req, res) => {
-    const cep = req.body.cep;
+    const cep: string = req.body.cep;
     return await collectController.dailyCollect(cep).then((response) => {
         res.status(200).send(response)
     }).catch((err) => {
@@ -40,7 +40,14 @@ routes.post('/coleta', async(req, res) => {
 });
 
 routes.post('/coleta/byPhone', async (req, res) => {
-    const phoneNumber = req.body.phoneNumber;
+    const phoneNumber: string = req.body.phoneNumber;
+    return await collectController.getCollectByPhoneNumber(phoneNumber).then((response) => {
+        res.status(200).send(response)
+    }).catch((err) => {
+        return res.status(res.statusCode || 400).json({
+            message: err.message || 'Unexpected error.'
+        })
+    })
 })
 
 export { routes };

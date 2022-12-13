@@ -19,4 +19,16 @@ export class UserRepository {
         
         return newUser;
     }
+
+    async findUserCepByPhone(phoneNumber: string) {
+        const user = await prisma.user.findUnique({
+            where: {
+                phoneNumber: phoneNumber
+            },
+            select: {
+                cep: true
+            }
+        })
+        return user;
+    }
 }
